@@ -23,6 +23,11 @@ classifiers = [
   "Programming Language :: Python :: 3.13",
 ]
 
+[project.urls]
+Homepage = "https://github.com/Akashdb5/jev-router"
+Repository = "https://github.com/Akashdb5/jev-router"
+Issues = "https://github.com/Akashdb5/jev-router/issues"
+
 [project.optional-dependencies]
 openai = ["openai>=1"]
 anthropic = ["anthropic>=0.40"]
