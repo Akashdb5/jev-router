@@ -1,0 +1,33 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "jev-router"
+version = "0.1.0"
+description = "Jev-powered security screening and cost-aware routing for OpenAI, Anthropic, and OpenRouter LLMs"
+readme = "README.md"
+requires-python = ">=3.10"
+license = "MIT"
+license-files = ["LICENSE"]
+authors = [{name = "Jev Router contributors"}]
+keywords = ["llm", "routing", "jev", "openai", "anthropic", "openrouter", "cost-optimization", "prompt-security"]
+classifiers = [
+  "Development Status :: 3 - Alpha",
+  "Intended Audience :: Developers",
+  "Programming Language :: Python :: 3",
+  "Programming Language :: Python :: 3 :: Only",
+  "Programming Language :: Python :: 3.10",
+  "Programming Language :: Python :: 3.11",
+  "Programming Language :: Python :: 3.12",
+  "Programming Language :: Python :: 3.13",
+]
+
+[project.optional-dependencies]
+openai = ["openai>=1"]
+anthropic = ["anthropic>=0.40"]
+jev = ["typesafe-sdk"]
+all = ["openai>=1", "anthropic>=0.40", "typesafe-sdk"]
+
+[tool.setuptools.packages.find]
+where = ["src"]

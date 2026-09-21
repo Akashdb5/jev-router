@@ -1,0 +1,10 @@
+[
+  {"name":"simple-high-confidence","violation":false,"security_confidence":0.99,"complexity":"SIMPLE_LOOKUP","complexity_confidence":0.88,"expected":"economy"},
+  {"name":"simple-below-threshold","violation":false,"security_confidence":0.99,"complexity":"SIMPLE_LOOKUP","complexity_confidence":0.879,"expected":"frontier"},
+  {"name":"moderate","violation":false,"security_confidence":0.99,"complexity":"MODERATE_REASONING","complexity_confidence":0.99,"expected":"frontier"},
+  {"name":"complex","violation":false,"security_confidence":0.99,"complexity":"COMPLEX_MULTI_STEP","complexity_confidence":0.99,"expected":"frontier"},
+  {"name":"low-choice-confidence","violation":false,"security_confidence":0.99,"complexity":"SIMPLE_LOOKUP","complexity_confidence":0.69,"expected":"frontier"},
+  {"name":"high-confidence-violation","violation":true,"security_confidence":0.95,"complexity":"SIMPLE_LOOKUP","complexity_confidence":0.99,"expected":"blocked"},
+  {"name":"uncertain-violation","violation":true,"security_confidence":0.94,"complexity":"SIMPLE_LOOKUP","complexity_confidence":0.99,"expected":"frontier"},
+  {"name":"uncertain-security-clearance","violation":false,"security_confidence":0.80,"complexity":"SIMPLE_LOOKUP","complexity_confidence":0.99,"expected":"frontier"}
+]
