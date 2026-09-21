@@ -115,6 +115,43 @@ The SDK measures the complete Noul + Choice decision time in `gate_latency_ms`; 
 
 Costs use provider-reported tokens and configured prices. The TypeSafe adapter also uses Jev-reported tokens and its configured price; the OpenRouter adapter uses its billed Jev `usage.cost`. Fixed `router_overhead_usd` can cover other routing costs. The baseline applies the frontier price to the selected model's token counts, so it is a **counterfactual estimate**, not an invoice. It does not yet account for provider-specific tokenization differences, prompt caching, discounts, or streaming interruptions. When provider usage is absent, cost fields are `None`.
 
+## Observed cost and latency example
+
+The following is one live comparison recorded on September 21, 2026. It demonstrates the accounting fields and should not be treated as a performance benchmark or a general savings claim.
+
+The prompt was `What is a ZIP code?` with `max_tokens=256`. The routed call used direct TypeSafe Jev screening and selected GPT-4o Mini because Jev returned a high-confidence `SIMPLE_LOOKUP` decision. A separate baseline call sent the same prompt directly to GPT-4o. Both calls returned correct definitions; the GPT-4o Mini answer was more verbose.
+
+Configured standard prices per one million tokens were:
+
+- Jev: `$0.042` input and `$0` output.
+- GPT-4o Mini: `$0.15` input and `$0.60` output.
+- GPT-4o: `$2.50` input and `$10.00` output.
+
+| Measurement | Jev-routed request | Fixed frontier baseline |
+| --- | ---: | ---: |
+| Route and model | Economy, GPT-4o Mini | Fixed, GPT-4o |
+| Model input tokens | 13 | 13 |
+| Model output tokens | 208 | 102 |
+| Jev input/output tokens | 434 / 74 | None |
+| Jev gate latency | 1,008.469 ms | None |
+| Total latency | 5,272.397 ms | 1,880.514 ms |
+| Model cost | $0.000126750 | $0.001052500 |
+| Jev/router cost | $0.000018228 | $0 |
+| Total observed cost | **$0.000144978** | **$0.001052500** |
+
+The measured saving for these two calls was:
+
+```text
+$0.001052500 - $0.000144978 = $0.000907522
+$0.000907522 / $0.001052500 = 86.2%
+```
+
+Token count alone did not decrease: GPT-4o Mini produced 208 output tokens while GPT-4o produced 102. The saving came from the lower token price outweighing the extra generation and Jev screening cost. The routed call was approximately 2.8 times slower, and its one-second gate time did not meet the project's sub-100 ms target.
+
+The router also reported `estimated_frontier_baseline_usd=$0.0021125` and `estimated_savings_usd=$0.001967522`. Those are counterfactual estimates that apply GPT-4o prices to the routed answer's 208 output tokens. The actual GPT-4o call stopped at 102 output tokens, so the measured two-call saving of `$0.000907522` is the appropriate comparison for this example.
+
+Model output length, service load, network location, caching, and stochastic generation can materially change the result. Evaluate many representative simple, complex, and unsafe prompts, constrain answer length when comparing models, and report distributions for routing accuracy, answer quality, cost, and latency before making production claims.
+
 ## Current scope
 
 Synchronous text messages with `system`, `user`, and `assistant` roles; OpenAI Chat Completions and Anthropic Messages; optional evidence-backed verification, temperature, and output limit. The `Completion.raw` field preserves the provider response. This is a routing SDK with provider adapters, not yet a drop-in replacement for either provider client. Tool calls, multimodal input, streaming, Responses API, and HTTP gateway are outside this first SDK milestone.
